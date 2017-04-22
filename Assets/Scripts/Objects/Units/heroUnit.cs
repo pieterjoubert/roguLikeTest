@@ -7,5 +7,6 @@ public class heroUnit : Unit{
     public heroUnit()
     {
         this.Type = "H";
+        this.NeedsUpdating = true;
     }
 }

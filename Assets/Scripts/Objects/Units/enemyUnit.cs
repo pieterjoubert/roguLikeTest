@@ -7,5 +7,6 @@ public class enemyUnit : Unit{
     public enemyUnit()
     {
         this.Type = "Z";
+        this.NeedsUpdating = true;
     }
 }

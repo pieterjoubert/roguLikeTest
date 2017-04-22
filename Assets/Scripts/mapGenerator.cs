@@ -26,37 +26,109 @@ public class mapGenerator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            
+        int x = findHero()[0];
+        int z = findHero()[1];
+       
 
-        }
-      
-      
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                if (map[x + 1, z].GetType().Name == "Wall")
+                {
+
+                }
+                else if (map[x + 1, z].GetType().Name == "enemyUnit")
+                {
+                    Debug.Log("Combat!");
+                }
+                else
+                {
+                    moveHero("N", x, z);
+                }
+
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                if (map[x - 1, z].GetType().Name == "Wall")
+                {
+
+                }
+                else if (map[x - 1, z].GetType().Name == "enemyUnit")
+                {
+                    Debug.Log("Combat!");
+                }
+                else
+                {
+                    moveHero("S", x, z);
+                }
+
+            }
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                if (map[x, z + 1].GetType().Name == "Wall")
+                {
+
+                }
+                else if (map[x, z + 1].GetType().Name == "enemyUnit")
+                {
+                    Debug.Log("Combat!");
+                }
+                else
+                {
+                    moveHero("E", x, z);
+                }
+
+            }
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                if (map[x, z - 1].GetType().Name == "Wall")
+                {
+
+                }
+                else if (map[x, z - 1].GetType().Name == "enemyUnit")
+                {
+                    Debug.Log("Combat!");
+                }
+                else
+                {
+                    moveHero("W", x, z);
+                }
+
+            }
+            drawMapFromArray(map);
+       
+
+       
     }
 
     void drawMapFromArray(baseObject [,] map)
     {
         for (int x = 0; x < HEIGHT; x++)
         {
-            for (int z = 0; z < HEIGHT; z++)
+            for (int z = 0; z < WIDTH; z++)
             {
-                string t = map[x, z].Type;
-                switch (t)
+                baseObject unit = map[x, z];
+                if (unit.NeedsUpdating)
                 {
-                    case "1":
-                        Instantiate(wallPrefab, new Vector3((x * 10) - ((WIDTH / 2) * 10), 5, (z * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
-                        break;
-                    case "Z":
-                        Instantiate(zombiePrefab, new Vector3((x * 10) - ((WIDTH / 2) * 10), 5, (z * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
-                        break;
-                    case "H":
-                        GameObject h = Instantiate(heroPrefab, new Vector3((x * 10) - ((WIDTH / 2) * 10), 5, (z * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
-                        Camera.main.GetComponent<cameraMovement>().followee = h;
-                        break;
-                    default:
-                        break;
+                    Destroy(unit.DisplayObject);
+                    string t = unit.Type;
+                    switch (t)
+                    {
+                        case "1":
+                            unit.DisplayObject = Instantiate(wallPrefab, new Vector3((z * 10) - ((WIDTH / 2) * 10), 5, (x * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
+                            break;
+                        case "Z":
+                            unit.DisplayObject = Instantiate(zombiePrefab, new Vector3((z * 10) - ((WIDTH / 2) * 10), 5, (x * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
+                            break;
+                        case "H":
+                            unit.DisplayObject = Instantiate(heroPrefab, new Vector3((z * 10) - ((WIDTH / 2) * 10), 5, (x * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
+                            Camera.main.GetComponent<cameraMovement>().followee = unit.DisplayObject;
+                            break;
+                        default:
+                            break;
+                    }
+                    unit.NeedsUpdating = false;
                 }
+                
 
             }
         }
@@ -93,7 +165,7 @@ public class mapGenerator : MonoBehaviour {
         {
             foreach(char c in line)
             {
-                Debug.Log("B" + x + " " + z);
+                //Debug.Log("B" + x + " " + z);
                 switch (c)
                 {
                     case '0':
@@ -115,15 +187,67 @@ public class mapGenerator : MonoBehaviour {
                     default:
                         break;
                 }
-                Debug.Log(x + " " + z);
-                x++;
+               
+                z++;
             }
-            x = 0;
-            z++;
+            Debug.Log(z);
+            z = 0;
+            x++;
 
         }
-
+        Debug.Log(x + " " + z + " " + HEIGHT + " " + WIDTH);
         return temp;
     }
+
+    private int[] findHero()
+    {
+        baseObject h;
+        int[] tempPos = new int[2];
+        for (int x = 0; x < HEIGHT; x++)
+        {
+            for (int z = 0; z < HEIGHT; z++)
+            {
+                if (map[x,z].Type == "H")
+                {
+                    tempPos[0] = x;
+                    tempPos[1] = z;
+                    return tempPos;
+                 }
+            }
+        }
+        return tempPos;
+
+    }
+
+    private void moveHero(string dir,int x, int z)
+    {
+        
+        Floor f = new Floor();
+        Unit h = (Unit) map[x, z];
+        map[x, z] = f;
+        switch (dir)
+        {
+            case "N":
+                x++; //move up
+                break;
+            case "S":
+                x--; //move up
+                break;
+            case "E":
+               z++; //move up
+                break;
+            case "W":
+                z--; //move up
+                break;
+            default:
+                break;
+        }
+        h.Destination = new Vector3(x * 10, 0, z * 10);
+        map[x, z] = h;
+        map[x, z].NeedsUpdating = true;
+        map[x, z].IsMoving = true;
+    }
+
+   
    
 }

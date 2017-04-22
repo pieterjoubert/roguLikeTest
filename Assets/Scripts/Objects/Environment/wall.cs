@@ -8,5 +8,6 @@ public class Wall : baseObject {
 	public Wall()
     {
         this.Type = "1";
+        this.NeedsUpdating = true;
     }
 }

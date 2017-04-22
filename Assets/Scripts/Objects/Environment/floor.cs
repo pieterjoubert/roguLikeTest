@@ -7,5 +7,6 @@ public class Floor : baseObject {
     public Floor()
     {
         this.Type = "0";
+        this.NeedsUpdating = true;
     }
 }
