@@ -14,7 +14,7 @@ public class rogueLikeController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKey(KeyCode.UpArrow))
+		/*if(Input.GetKey(KeyCode.UpArrow))
         {
             this.transform.position += this.transform.forward * Time.deltaTime * moveSpeed;
             if(!inCollision)
@@ -33,12 +33,12 @@ public class rogueLikeController : MonoBehaviour {
                 Camera.main.transform.Translate(new Vector3(0,-moveSpeed * Time.deltaTime, 0));
         }
         if (Input.GetKey(KeyCode.RightArrow))
-
         {
             this.transform.position += this.transform.right * Time.deltaTime * moveSpeed;
             if (!inCollision)
                 Camera.main.transform.Translate(new Vector3(moveSpeed * Time.deltaTime, 0, 0));
         }
+
         if (Input.GetKey(KeyCode.D))
         {
             if (inCollision)
@@ -46,18 +46,18 @@ public class rogueLikeController : MonoBehaviour {
                 Destroy(collisionObject);
                 inCollision = false;
             }
-        }
+        }*/
     }
 
-    void OnCollisionEnter(Collision collision)
+   /* void OnCollisionEnter(Collision collision)
     {
         inCollision = true;
-        if (collision.gameObject.tag == "breakable")
+        if (collision.gameObject.tag == "wall")
             this.collisionObject = collision.gameObject;
     }
 
     void OnCollisionExit(Collision collision)
     {
         inCollision = false;
-    }
+    }*/
 }

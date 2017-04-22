@@ -46,7 +46,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Objects\Environment\floor.cs" />
+     <Compile Include="Assets\Scripts\Objects\Environment\wall.cs" />
+     <Compile Include="Assets\Scripts\Objects\Units\Unit.cs" />
+     <Compile Include="Assets\Scripts\Objects\Units\enemyUnit.cs" />
+     <Compile Include="Assets\Scripts\Objects\Units\heroUnit.cs" />
+     <Compile Include="Assets\Scripts\Objects\baseObject.cs" />
      <Compile Include="Assets\Scripts\cameraMovement.cs" />
+     <Compile Include="Assets\Scripts\enemyMovement.cs" />
      <Compile Include="Assets\Scripts\mapGenerator.cs" />
      <Compile Include="Assets\Scripts\rogueLikeController.cs" />
  <Reference Include="UnityEngine.UI">
