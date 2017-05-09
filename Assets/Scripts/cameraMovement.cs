@@ -6,6 +6,7 @@ public class cameraMovement : MonoBehaviour {
 
     public GameObject followee;
     public float height;
+    public float speed;
     
     // Use this for initialization
     void Start () {
@@ -14,6 +15,22 @@ public class cameraMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        this.transform.position = new Vector3(followee.transform.position.x, height, followee.transform.position.z);
+
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                this.transform.position += Vector3.forward * Time.deltaTime * speed;
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                this.transform.position -= Vector3.forward * Time.deltaTime * speed;
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                this.transform.position += Vector3.right * Time.deltaTime * speed;
+            }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                this.transform.position -= Vector3.right * Time.deltaTime * speed;
+            }
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class mapGenerator : MonoBehaviour {
 
     public GameObject wallPrefab;
+    public GameObject floorPrefab;
     public GameObject heroPrefab;
     public GameObject zombiePrefab;
     private baseObject[,] map;
@@ -26,75 +27,84 @@ public class mapGenerator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        int x = findHero()[0];
-        int z = findHero()[1];
+        int z = findHero()[0];
+        int x = findHero()[1];
        
 
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+/*            if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                if (map[x + 1, z].GetType().Name == "Wall")
+                if (map[z + 1, x].GetType().Name == "Wall")
                 {
 
                 }
-                else if (map[x + 1, z].GetType().Name == "enemyUnit")
+                else if (map[z + 1, x].GetType().Name == "enemyUnit")
                 {
                     Debug.Log("Combat!");
                 }
                 else
                 {
-                    moveHero("N", x, z);
+                    moveHero("N", z, x);
                 }
 
             }
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (map[x - 1, z].GetType().Name == "Wall")
+                if (map[z - 1, x].GetType().Name == "Wall")
                 {
 
                 }
-                else if (map[x - 1, z].GetType().Name == "enemyUnit")
+                else if (map[z - 1, x].GetType().Name == "enemyUnit")
                 {
                     Debug.Log("Combat!");
                 }
                 else
                 {
-                    moveHero("S", x, z);
+                    moveHero("S", z, x);
                 }
 
             }
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                if (map[x, z + 1].GetType().Name == "Wall")
+                if (map[z, x + 1].GetType().Name == "Wall")
                 {
 
                 }
-                else if (map[x, z + 1].GetType().Name == "enemyUnit")
+                else if (map[z, x + 1].GetType().Name == "enemyUnit")
                 {
                     Debug.Log("Combat!");
                 }
                 else
                 {
-                    moveHero("E", x, z);
+                    moveHero("E", z, x);
                 }
 
             }
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                if (map[x, z - 1].GetType().Name == "Wall")
+                if (map[z, x - 1].GetType().Name == "Wall")
                 {
 
                 }
-                else if (map[x, z - 1].GetType().Name == "enemyUnit")
+                else if (map[z, x - 1].GetType().Name == "enemyUnit")
                 {
                     Debug.Log("Combat!");
                 }
                 else
                 {
-                    moveHero("W", x, z);
+                    moveHero("W", z, x);
                 }
 
+            }*/
+
+            if ( Input.GetMouseButtonDown (0)){ 
+                Debug.Log("Clicking...");
+            RaycastHit hit; 
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
+            if ( Physics.Raycast (ray,out hit,200.0f)) {
+                Debug.DrawLine(Camera.main.transform.position, hit.transform.position, Color.white);
+                Debug.Log("You selected the " + hit.transform.name); // ensure you picked right object
             }
-            drawMapFromArray(map);
+            }
        
 
        
@@ -102,25 +112,28 @@ public class mapGenerator : MonoBehaviour {
 
     void drawMapFromArray(baseObject [,] map)
     {
-        for (int x = 0; x < HEIGHT; x++)
+        for (int z = 0; z < HEIGHT; z++)
         {
-            for (int z = 0; z < WIDTH; z++)
+            for (int x = 0; x < WIDTH; x++)
             {
-                baseObject unit = map[x, z];
+                baseObject unit = map[z, x];
                 if (unit.NeedsUpdating)
                 {
                     Destroy(unit.DisplayObject);
                     string t = unit.Type;
                     switch (t)
                     {
+                        case "0":
+                            unit.DisplayObject = Instantiate(floorPrefab, new Vector3((x * 10) - ((WIDTH / 2) * 10), 0, (z * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
+                            break;
                         case "1":
-                            unit.DisplayObject = Instantiate(wallPrefab, new Vector3((z * 10) - ((WIDTH / 2) * 10), 5, (x * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
+                            unit.DisplayObject = Instantiate(wallPrefab, new Vector3((x * 10) - ((WIDTH / 2) * 10), 6, (z * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
                             break;
                         case "Z":
-                            unit.DisplayObject = Instantiate(zombiePrefab, new Vector3((z * 10) - ((WIDTH / 2) * 10), 5, (x * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
+                            unit.DisplayObject = Instantiate(zombiePrefab, new Vector3((x * 10) - ((WIDTH / 2) * 10), 6, (z * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
                             break;
                         case "H":
-                            unit.DisplayObject = Instantiate(heroPrefab, new Vector3((z * 10) - ((WIDTH / 2) * 10), 5, (x * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
+                            unit.DisplayObject = Instantiate(heroPrefab, new Vector3((x * 10) - ((WIDTH / 2) * 10), 6, (z * 10) - ((HEIGHT / 2) * 10)), Quaternion.identity);
                             Camera.main.GetComponent<cameraMovement>().followee = unit.DisplayObject;
                             break;
                         default:
@@ -170,32 +183,32 @@ public class mapGenerator : MonoBehaviour {
                 {
                     case '0':
                         Floor floor = new Floor();
-                        temp[x, z] = floor;
+                        temp[z, x] = floor;
                         break;
                     case '1':
                         Wall wall = new Wall();
-                        temp[x, z] = wall;
+                        temp[z, x] = wall;
                         break;
                     case'Z':
                         enemyUnit zombie = new enemyUnit();
-                        temp[x, z] = zombie;
+                        temp[z, x] = zombie;
                         break;
                     case 'H':
                         heroUnit hero = new heroUnit();
-                        temp[x, z] = hero;
+                        temp[z, x] = hero;
                         break;
                     default:
                         break;
                 }
                
-                z++;
+                x++;
             }
-            Debug.Log(z);
-            z = 0;
-            x++;
+            Debug.Log(x);
+            x = 0;
+            z++;
 
         }
-        Debug.Log(x + " " + z + " " + HEIGHT + " " + WIDTH);
+        Debug.Log(z + " " + x + " " + HEIGHT + " " + WIDTH);
         return temp;
     }
 
@@ -203,14 +216,14 @@ public class mapGenerator : MonoBehaviour {
     {
         baseObject h;
         int[] tempPos = new int[2];
-        for (int x = 0; x < HEIGHT; x++)
+        for (int z = 0; z < HEIGHT; z++)
         {
-            for (int z = 0; z < HEIGHT; z++)
+            for (int x = 0; x < WIDTH; x++)
             {
-                if (map[x,z].Type == "H")
+                if (map[z,x].Type == "H")
                 {
-                    tempPos[0] = x;
-                    tempPos[1] = z;
+                    tempPos[0] = z;
+                    tempPos[1] = x;
                     return tempPos;
                  }
             }
